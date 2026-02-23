@@ -34,6 +34,6 @@ app.use((error, _req, res, _next) => {
   res.status(500).json({ message: "Internal server error." });
 });
 
-app.listen(env.port, () => {
-  console.log(`Backend listening on http://localhost:${env.port}`);
+app.listen(env.port, "0.0.0.0", () => {
+  console.log(`Backend listening on port ${env.port}`);
 });
