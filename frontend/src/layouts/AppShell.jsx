@@ -1,5 +1,5 @@
 import { Link, NavLink, Outlet } from "react-router-dom";
-import { LayoutDashboard, ListChecks, LogOut, Shield, Swords, Trophy, UserCog } from "lucide-react";
+import { FileCode2, LayoutDashboard, ListChecks, LogOut, Shield, Swords, Trophy, UserCog } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 
 const navItems = [
@@ -87,6 +87,19 @@ export default function AppShell() {
                 >
                   <UserCog className="h-4 w-4" />
                   Admin Users
+                </NavLink>
+                <NavLink
+                  to="/admin/submissions"
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition ${
+                      isActive
+                        ? "bg-amber-400 text-slate-950"
+                        : "text-amber-200 hover:bg-amber-500/10"
+                    }`
+                  }
+                >
+                  <FileCode2 className="h-4 w-4" />
+                  Admin Submissions
                 </NavLink>
               </>
             )}

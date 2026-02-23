@@ -131,6 +131,54 @@ export async function listMySubmissions(req, res) {
   return res.json({ submissions: rows });
 }
 
+export async function listAllSubmissions(req, res) {
+  const { problemId, contestId, userId } = req.query;
+  const params = [];
+  const conditions = [];
+
+  let query = `
+    SELECT s.id,
+           s.user_id,
+           s.problem_id,
+           s.language,
+           s.verdict,
+           s.execution_time_ms,
+           s.memory_kb,
+           s.created_at,
+           p.title AS problem_title,
+           u.username,
+           u.display_name
+    FROM submissions s
+    JOIN problems p ON p.id = s.problem_id
+    JOIN users u ON u.id = s.user_id
+  `;
+
+  if (contestId) {
+    params.push(contestId);
+    query += " JOIN contest_problems cp ON cp.problem_id = s.problem_id";
+    conditions.push(`cp.contest_id = $${params.length}`);
+  }
+
+  if (problemId) {
+    params.push(problemId);
+    conditions.push(`s.problem_id = $${params.length}`);
+  }
+
+  if (userId) {
+    params.push(userId);
+    conditions.push(`s.user_id = $${params.length}`);
+  }
+
+  if (conditions.length) {
+    query += ` WHERE ${conditions.join(" AND ")}`;
+  }
+
+  query += " ORDER BY s.created_at DESC LIMIT 200";
+
+  const { rows } = await pool.query(query, params);
+  return res.json({ submissions: rows });
+}
+
 export async function getSubmissionDetails(req, res) {
   const { id } = req.params;
   const submissionResult = await pool.query(

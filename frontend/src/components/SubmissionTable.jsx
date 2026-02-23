@@ -1,7 +1,7 @@
 import VerdictBadge from "./VerdictBadge";
 import { formatDate } from "../utils/format";
 
-export default function SubmissionTable({ submissions }) {
+export default function SubmissionTable({ submissions, showUser = false }) {
   return (
     <div className="overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/70 shadow-glow">
       <div className="overflow-x-auto">
@@ -9,6 +9,7 @@ export default function SubmissionTable({ submissions }) {
           <thead className="bg-slate-950/70 text-left text-xs uppercase tracking-[0.24em] text-slate-500">
             <tr>
               <th className="px-6 py-4">Run ID</th>
+              {showUser && <th className="px-6 py-4">User</th>}
               <th className="px-6 py-4">Problem</th>
               <th className="px-6 py-4">Verdict</th>
               <th className="px-6 py-4">Time</th>
@@ -20,6 +21,12 @@ export default function SubmissionTable({ submissions }) {
             {submissions.map((submission) => (
               <tr key={submission.id} className="hover:bg-slate-800/35">
                 <td className="px-6 py-4 text-slate-500">#{submission.id}</td>
+                {showUser && (
+                  <td className="px-6 py-4">
+                    {submission.display_name || submission.username}
+                    <div className="text-xs text-slate-500">@{submission.username}</div>
+                  </td>
+                )}
                 <td className="px-6 py-4">{submission.problem_title || submission.title}</td>
                 <td className="px-6 py-4">
                   <VerdictBadge verdict={submission.verdict} />

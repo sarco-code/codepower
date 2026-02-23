@@ -7,6 +7,7 @@ import ProblemDetailPage from "./pages/ProblemDetailPage";
 import ContestsPage from "./pages/ContestsPage";
 import AdminProblemsPage from "./pages/AdminProblemsPage";
 import AdminContestsPage from "./pages/AdminContestsPage";
+import AdminSubmissionsPage from "./pages/AdminSubmissionsPage";
 import AdminUsersPage from "./pages/AdminUsersPage";
 import ContestWorkspacePage from "./pages/ContestWorkspacePage";
 import LoginPage from "./pages/LoginPage";
@@ -59,6 +60,7 @@ export default function App() {
           <Route path="/admin/problems" element={<AdminProblemsPage />} />
           <Route path="/admin/contests" element={<AdminContestsPage />} />
           <Route path="/admin/users" element={<AdminUsersPage />} />
+          <Route path="/admin/submissions" element={<AdminSubmissionsPage />} />
         </Route>
       </Route>
 
