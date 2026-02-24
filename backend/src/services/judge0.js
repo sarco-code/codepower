@@ -16,7 +16,7 @@ function getHeaders() {
   return headers;
 }
 
-export async function runCode({ sourceCode, languageId, stdin }) {
+export async function runCode({ sourceCode, languageId, stdin, expectedOutput }) {
   const createResponse = await fetch(
     `${env.judge0ApiUrl}/submissions?base64_encoded=false&wait=false`,
     {
@@ -25,7 +25,8 @@ export async function runCode({ sourceCode, languageId, stdin }) {
       body: JSON.stringify({
         source_code: sourceCode,
         language_id: languageId,
-        stdin
+        stdin,
+        expected_output: expectedOutput
       })
     }
   );

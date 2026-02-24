@@ -42,7 +42,8 @@ export async function createSubmission(req, res) {
       const result = await runCode({
         sourceCode,
         languageId: judge0Id,
-        stdin: testCase.input
+        stdin: testCase.input,
+        expectedOutput: testCase.expected_output
       });
       const actualOutput = getResultOutput(result);
 

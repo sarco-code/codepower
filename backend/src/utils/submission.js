@@ -18,7 +18,7 @@ export function normalizeText(value) {
 }
 
 export function mapJudge0Status(statusId, actualOutput, expectedOutput) {
-  if (statusId === 3) {
+  if (statusId === 3 || statusId === 4) {
     return normalizeText(actualOutput) === normalizeText(expectedOutput)
       ? "Accepted"
       : "Wrong Answer";
