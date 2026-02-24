@@ -1,7 +1,12 @@
 import VerdictBadge from "./VerdictBadge";
 import { formatDate } from "../utils/format";
 
-export default function SubmissionTable({ submissions, showUser = false }) {
+export default function SubmissionTable({
+  submissions,
+  showUser = false,
+  selectedSubmissionId = null,
+  onSelectSubmission
+}) {
   return (
     <div className="overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/70 shadow-glow">
       <div className="overflow-x-auto">
@@ -19,7 +24,13 @@ export default function SubmissionTable({ submissions, showUser = false }) {
           </thead>
           <tbody className="divide-y divide-slate-800 text-slate-300">
             {submissions.map((submission) => (
-              <tr key={submission.id} className="hover:bg-slate-800/35">
+              <tr
+                key={submission.id}
+                onClick={() => onSelectSubmission?.(submission)}
+                className={`hover:bg-slate-800/35 ${onSelectSubmission ? "cursor-pointer" : ""} ${
+                  selectedSubmissionId === submission.id ? "bg-slate-800/45" : ""
+                }`}
+              >
                 <td className="px-6 py-4 text-slate-500">#{submission.id}</td>
                 {showUser && (
                   <td className="px-6 py-4">

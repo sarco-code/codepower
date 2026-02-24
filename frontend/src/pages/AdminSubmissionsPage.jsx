@@ -2,11 +2,14 @@ import { useEffect, useState } from "react";
 import api from "../services/api";
 import Loader from "../components/Loader";
 import SubmissionTable from "../components/SubmissionTable";
+import VerdictBadge from "../components/VerdictBadge";
 
 export default function AdminSubmissionsPage() {
   const [submissions, setSubmissions] = useState(null);
   const [contests, setContests] = useState([]);
   const [problems, setProblems] = useState([]);
+  const [selectedSubmission, setSelectedSubmission] = useState(null);
+  const [detailsLoading, setDetailsLoading] = useState(false);
   const [filters, setFilters] = useState({
     contestId: "",
     problemId: ""
@@ -36,7 +39,18 @@ export default function AdminSubmissionsPage() {
 
   async function applyFilters(nextFilters) {
     setFilters(nextFilters);
+    setSelectedSubmission(null);
     await loadSubmissions(nextFilters);
+  }
+
+  async function handleSelectSubmission(submission) {
+    setDetailsLoading(true);
+    try {
+      const response = await api.get(`/submissions/${submission.id}`);
+      setSelectedSubmission(response.data.submission);
+    } finally {
+      setDetailsLoading(false);
+    }
   }
 
   if (!submissions) {
@@ -87,7 +101,88 @@ export default function AdminSubmissionsPage() {
         </div>
       </div>
 
-      <SubmissionTable submissions={submissions} showUser />
+      <SubmissionTable
+        submissions={submissions}
+        showUser
+        selectedSubmissionId={selectedSubmission?.id}
+        onSelectSubmission={handleSelectSubmission}
+      />
+
+      <div className="rounded-[32px] border border-slate-800 bg-slate-950/80 p-6 shadow-glow">
+        <div className="mb-4 flex items-center justify-between gap-3">
+          <div>
+            <p className="text-xs uppercase tracking-[0.28em] text-slate-500">Submission Review</p>
+            <h2 className="mt-2 text-2xl font-semibold text-slate-100">
+              {selectedSubmission ? `Run #${selectedSubmission.id}` : "Select a submission"}
+            </h2>
+          </div>
+          {selectedSubmission && <VerdictBadge verdict={selectedSubmission.verdict} />}
+        </div>
+
+        {detailsLoading ? (
+          <Loader label="Loading submission details..." />
+        ) : !selectedSubmission ? (
+          <p className="text-sm text-slate-400">Choose any row above to inspect submitted source code and testcase results.</p>
+        ) : (
+          <div className="space-y-6">
+            <div className="grid gap-4 md:grid-cols-4">
+              <InfoCard label="Problem" value={selectedSubmission.problem_title} />
+              <InfoCard label="Language" value={selectedSubmission.language} />
+              <InfoCard label="Time" value={`${selectedSubmission.execution_time_ms} ms`} />
+              <InfoCard label="Memory" value={`${selectedSubmission.memory_kb} KB`} />
+            </div>
+
+            <div>
+              <p className="mb-3 text-sm font-medium text-slate-200">Source Code</p>
+              <pre className="overflow-x-auto rounded-3xl border border-slate-800 bg-slate-900 p-5 text-sm text-slate-200">
+                {selectedSubmission.source_code}
+              </pre>
+            </div>
+
+            <div>
+              <p className="mb-3 text-sm font-medium text-slate-200">Test Results</p>
+              <div className="space-y-4">
+                {selectedSubmission.testResults.map((result) => (
+                  <div key={result.id} className="rounded-3xl border border-slate-800 bg-slate-900/70 p-5">
+                    <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                      <p className="text-sm font-medium text-slate-100">Test #{result.test_case_id}</p>
+                      <VerdictBadge verdict={result.verdict} />
+                    </div>
+                    <div className="grid gap-4 lg:grid-cols-2">
+                      <OutputBlock label="Actual Output" value={result.actual_output} />
+                      <OutputBlock label="Expected Output" value={result.expected_output} />
+                    </div>
+                    <div className="mt-4 flex gap-6 text-xs text-slate-500">
+                      <span>Time: {result.time_ms} ms</span>
+                      <span>Memory: {result.memory_kb} KB</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function InfoCard({ label, value }) {
+  return (
+    <div className="rounded-3xl border border-slate-800 bg-slate-900/70 p-4">
+      <p className="text-xs uppercase tracking-[0.24em] text-slate-500">{label}</p>
+      <p className="mt-2 text-sm font-medium text-slate-100">{value}</p>
+    </div>
+  );
+}
+
+function OutputBlock({ label, value }) {
+  return (
+    <div>
+      <p className="mb-2 text-xs uppercase tracking-[0.24em] text-slate-500">{label}</p>
+      <pre className="overflow-x-auto whitespace-pre-wrap rounded-2xl bg-slate-950 p-4 text-xs text-slate-200">
+        {value || "(empty)"}
+      </pre>
     </div>
   );
 }
