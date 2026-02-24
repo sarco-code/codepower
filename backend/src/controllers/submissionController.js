@@ -1,6 +1,6 @@
 import { pool } from "../db/pool.js";
 import { runCode } from "../services/judge0.js";
-import { getLanguageConfig, mapJudge0Status } from "../utils/submission.js";
+import { getLanguageConfig, getResultOutput, mapJudge0Status } from "../utils/submission.js";
 
 export async function createSubmission(req, res) {
   const { problemId, language, sourceCode } = req.body;
@@ -44,10 +44,11 @@ export async function createSubmission(req, res) {
         languageId: judge0Id,
         stdin: testCase.input
       });
+      const actualOutput = getResultOutput(result);
 
       const verdict = mapJudge0Status(
         result.status_id,
-        result.stdout ?? result.compile_output ?? result.stderr ?? "",
+        actualOutput,
         testCase.expected_output
       );
 
@@ -62,7 +63,7 @@ export async function createSubmission(req, res) {
           submission.id,
           testCase.id,
           verdict,
-          result.stdout ?? result.stderr ?? result.compile_output ?? "",
+          actualOutput,
           testCase.expected_output,
           Math.round(Number(result.time || 0) * 1000),
           Number(result.memory || 0)

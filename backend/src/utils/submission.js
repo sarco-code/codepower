@@ -1,8 +1,16 @@
 const statusMap = {
   3: "Accepted",
+  4: "Wrong Answer",
   5: "Time Limit Exceeded",
   6: "Compilation Error",
-  11: "Runtime Error"
+  7: "Runtime Error",
+  8: "Runtime Error",
+  9: "Runtime Error",
+  10: "Runtime Error",
+  11: "Runtime Error",
+  12: "Runtime Error",
+  13: "Judge Error",
+  14: "Judge Error"
 };
 
 export function normalizeText(value) {
@@ -17,6 +25,26 @@ export function mapJudge0Status(statusId, actualOutput, expectedOutput) {
   }
 
   return statusMap[statusId] || "Runtime Error";
+}
+
+export function getResultOutput(result) {
+  if (typeof result.stdout === "string" && result.stdout.length > 0) {
+    return result.stdout;
+  }
+
+  if (typeof result.compile_output === "string" && result.compile_output.length > 0) {
+    return result.compile_output;
+  }
+
+  if (typeof result.stderr === "string" && result.stderr.length > 0) {
+    return result.stderr;
+  }
+
+  if (typeof result.message === "string" && result.message.length > 0) {
+    return result.message;
+  }
+
+  return "";
 }
 
 export function getLanguageConfig(language) {

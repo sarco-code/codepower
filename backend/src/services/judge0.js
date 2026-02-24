@@ -40,7 +40,7 @@ export async function runCode({ sourceCode, languageId, stdin }) {
   for (let attempt = 0; attempt < 15; attempt += 1) {
     await new Promise((resolve) => setTimeout(resolve, 800));
     const resultResponse = await fetch(
-      `${env.judge0ApiUrl}/submissions/${token}?base64_encoded=false&fields=status_id,stdout,stderr,compile_output,time,memory`,
+      `${env.judge0ApiUrl}/submissions/${token}?base64_encoded=false&fields=status_id,stdout,stderr,compile_output,message,time,memory`,
       {
         headers: getHeaders()
       }
@@ -63,6 +63,7 @@ export async function runCode({ sourceCode, languageId, stdin }) {
     stdout: "",
     stderr: "Execution timed out while polling Judge0.",
     compile_output: "",
+    message: "",
     time: null,
     memory: null
   };
