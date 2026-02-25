@@ -59,6 +59,21 @@ export default function ContestWorkspacePage() {
   }, [selectedProblemId]);
 
   useEffect(() => {
+    if (!selectedProblemId || !submissions.some((submission) => submission.verdict === "Running")) {
+      return undefined;
+    }
+
+    const intervalId = setInterval(() => {
+      api
+        .get(`/submissions?problemId=${selectedProblemId}`)
+        .then((response) => setSubmissions(response.data.submissions))
+        .catch(() => {});
+    }, 3000);
+
+    return () => clearInterval(intervalId);
+  }, [selectedProblemId, submissions]);
+
+  useEffect(() => {
     setSourceCode(templates[language]);
   }, [language]);
 

@@ -49,6 +49,21 @@ export default function ProblemDetailPage() {
   }, [id]);
 
   useEffect(() => {
+    if (!submissions.some((submission) => submission.verdict === "Running")) {
+      return undefined;
+    }
+
+    const intervalId = setInterval(() => {
+      api
+        .get(`/submissions?problemId=${id}`)
+        .then((response) => setSubmissions(response.data.submissions))
+        .catch(() => {});
+    }, 3000);
+
+    return () => clearInterval(intervalId);
+  }, [id, submissions]);
+
+  useEffect(() => {
     setSourceCode(templates[language]);
   }, [language]);
 

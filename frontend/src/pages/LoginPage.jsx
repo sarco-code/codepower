@@ -34,8 +34,8 @@ export default function LoginPage() {
               Train with real verdicts, contests, and a serious dark-mode workflow.
             </h1>
             <p className="mt-6 max-w-lg text-base leading-7 text-slate-400">
-              React, Tailwind, Monaco, PostgreSQL, and Judge0 in a single coding arena with admin tooling for
-              problem creation and testcase management.
+              React, Tailwind, Monaco, PostgreSQL, and a cloud judge engine in a single coding arena with admin
+              tooling for problem creation and testcase management.
             </p>
           </div>
 

@@ -7,7 +7,7 @@ Full-stack competitive programming platform inspired by Codeforces and AtCoder.
 - Frontend: React, Vite, Tailwind CSS, Monaco Editor
 - Backend: Node.js, Express
 - Database: PostgreSQL
-- Code execution: Judge0 API
+- Code execution: OnlineCompiler API (callback based)
 
 ## Workspace Layout
 
@@ -56,7 +56,8 @@ Full-stack competitive programming platform inspired by Codeforces and AtCoder.
 3. Create `frontend/.env` from `frontend/.env.example`.
 4. Create the PostgreSQL schema with [backend/sql/schema.sql](/C:/Users/sarco/Desktop/imicontest/backend/sql/schema.sql).
 5. Optionally seed sample data with [backend/sql/seed.sql](/C:/Users/sarco/Desktop/imicontest/backend/sql/seed.sql).
-6. Run both apps with `npm run dev`.
+6. Set your OnlineCompiler app callback URL to `https://your-backend-domain/api/judge/callback`.
+7. Run both apps with `npm run dev`.
 
 Admin credentials are validated only on the backend via environment variables. The provided default values are:
 

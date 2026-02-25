@@ -60,6 +60,26 @@ CREATE TABLE IF NOT EXISTS submission_test_results (
   memory_kb INTEGER NOT NULL DEFAULT 0
 );
 
+CREATE TABLE IF NOT EXISTS submission_judge_jobs (
+  id BIGSERIAL PRIMARY KEY,
+  submission_id BIGINT NOT NULL REFERENCES submissions(id) ON DELETE CASCADE,
+  test_case_id BIGINT NOT NULL REFERENCES problem_test_cases(id) ON DELETE CASCADE,
+  compiler VARCHAR(60) NOT NULL,
+  source_code TEXT NOT NULL,
+  stdin TEXT NOT NULL DEFAULT '',
+  expected_output TEXT NOT NULL DEFAULT '',
+  status VARCHAR(20) NOT NULL DEFAULT 'queued'
+    CHECK (status IN ('queued', 'processing', 'completed', 'failed', 'cancelled')),
+  verdict VARCHAR(40),
+  actual_output TEXT,
+  callback_payload JSONB,
+  time_ms INTEGER NOT NULL DEFAULT 0,
+  memory_kb INTEGER NOT NULL DEFAULT 0,
+  started_at TIMESTAMPTZ,
+  finished_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
 CREATE TABLE IF NOT EXISTS contests (
   id BIGSERIAL PRIMARY KEY,
   title VARCHAR(200) NOT NULL,
@@ -79,3 +99,4 @@ CREATE TABLE IF NOT EXISTS contest_problems (
 CREATE INDEX IF NOT EXISTS idx_submissions_user_id ON submissions(user_id);
 CREATE INDEX IF NOT EXISTS idx_submissions_problem_id ON submissions(problem_id);
 CREATE INDEX IF NOT EXISTS idx_problem_test_cases_problem_id ON problem_test_cases(problem_id);
+CREATE INDEX IF NOT EXISTS idx_submission_judge_jobs_status_id ON submission_judge_jobs(status, id);

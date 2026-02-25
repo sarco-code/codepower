@@ -15,9 +15,8 @@ export const env = {
   clientUrl: process.env.CLIENT_URL || "http://localhost:5173",
   databaseUrl: process.env.DATABASE_URL,
   jwtSecret: process.env.JWT_SECRET,
-  judge0ApiUrl: process.env.JUDGE0_API_URL || "https://judge0-ce.p.rapidapi.com",
-  judge0ApiKey: process.env.JUDGE0_API_KEY || "",
-  judge0ApiHost: process.env.JUDGE0_API_HOST || "",
+  onlineCompilerApiUrl: process.env.ONLINECOMPILER_API_URL || "https://api.onlinecompiler.io/api/run-code",
+  onlineCompilerApiKey: process.env.ONLINECOMPILER_API_KEY || "",
   adminUsername: process.env.ADMIN_USERNAME || "adminlogin",
   adminPassword: process.env.ADMIN_PASSWORD || "sarcstar_r9",
   adminDisplayName: process.env.ADMIN_DISPLAY_NAME || "Sarcstar Admin"
