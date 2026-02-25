@@ -3,45 +3,19 @@ export function normalizeText(value) {
 }
 
 export function mapExecutionVerdict(result, actualOutput, expectedOutput) {
-  if (!result || typeof result !== "object") {
+  if (!result || !result.run) {
     return "Judge Error";
   }
 
-  if (result.status && String(result.status).toLowerCase() !== "success") {
-    return "Judge Error";
-  }
-
-  if (String(result.error || "").trim().length > 0) {
-    const errorText = String(result.error).toLowerCase();
-
-    if (errorText.includes("time limit") || errorText.includes("timeout")) {
-      return "Time Limit Exceeded";
-    }
-
-    if (errorText.includes("compile") || errorText.includes("compilation")) {
-      return "Compilation Error";
-    }
-
-    return "Runtime Error";
-  }
-
-  if (String(result.signal || "").trim().length > 0) {
-    return "Runtime Error";
-  }
-
-  if (Number(result.exit_code) !== 0 && result.exit_code !== null && result.exit_code !== undefined) {
-    return "Runtime Error";
-  }
-
-  if (normalizeText(actualOutput).startsWith("time limit exceeded")) {
+  if (result.run.status === "TO") {
     return "Time Limit Exceeded";
   }
 
-  if (looksLikeCompilationError(actualOutput)) {
+  if (result.compile && (result.compile.code !== 0 || result.compile.status)) {
     return "Compilation Error";
   }
 
-  if (looksLikeRuntimeError(actualOutput)) {
+  if (result.run.code !== 0 || result.run.signal || result.run.status === "RE" || result.run.status === "SG") {
     return "Runtime Error";
   }
 
@@ -67,22 +41,10 @@ function looksLikeRuntimeError(output) {
   ].some((pattern) => text.includes(pattern));
 }
 
-function looksLikeCompilationError(output) {
-  const text = normalizeText(output).toLowerCase();
-  return [
-    "error:",
-    "compilation failed",
-    "undefined reference",
-    "expected ';'",
-    "syntaxerror",
-    "nameerror"
-  ].some((pattern) => text.includes(pattern));
-}
-
 export function getLanguageConfig(language) {
   if (language === "python") {
-    return { compiler: "python-3.9.7", monaco: "python" };
+    return { executorLanguage: "python", version: "3.10.0", monaco: "python" };
   }
 
-  return { compiler: "g++-4.9", monaco: "cpp" };
+  return { executorLanguage: "c++", version: "10.2.0", monaco: "cpp" };
 }
