@@ -1,5 +1,5 @@
 import { pool } from "../db/pool.js";
-import { runCode } from "../services/piston.js";
+import { runCode } from "../services/onlineCompiler.js";
 import { getLanguageConfig, mapExecutionVerdict } from "../utils/submission.js";
 
 export async function createSubmission(req, res) {
@@ -31,7 +31,7 @@ export async function createSubmission(req, res) {
   );
 
   const submission = insertSubmission.rows[0];
-  const { executorLanguage, version } = getLanguageConfig(language);
+  const { compiler } = getLanguageConfig(language);
 
   let finalVerdict = "Accepted";
   let maxTime = 0;
@@ -43,11 +43,10 @@ export async function createSubmission(req, res) {
       currentTestCaseId = testCase.id;
       const result = await runCode({
         sourceCode,
-        language: executorLanguage,
-        version,
+        compiler,
         stdin: testCase.input
       });
-      const actualOutput = result.run?.stdout || result.run?.output || result.run?.stderr || "";
+      const actualOutput = result.output || result.error || "";
 
       const verdict = mapExecutionVerdict(
         result,
@@ -55,8 +54,8 @@ export async function createSubmission(req, res) {
         testCase.expected_output
       );
 
-      maxTime = Math.max(maxTime, Math.round(Number(result.run?.cpu_time || 0)));
-      maxMemory = Math.max(maxMemory, Number(result.run?.memory || 0));
+      maxTime = Math.max(maxTime, Math.round(Number(result.time || 0) * 1000));
+      maxMemory = Math.max(maxMemory, Number(result.memory || 0));
 
       await pool.query(
         `INSERT INTO submission_test_results
@@ -68,8 +67,8 @@ export async function createSubmission(req, res) {
           verdict,
           actualOutput,
           testCase.expected_output,
-          Math.round(Number(result.run?.cpu_time || 0)),
-          Number(result.run?.memory || 0)
+          Math.round(Number(result.time || 0) * 1000),
+          Number(result.memory || 0)
         ]
       );
 

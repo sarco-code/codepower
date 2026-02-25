@@ -15,7 +15,9 @@ export const env = {
   clientUrl: process.env.CLIENT_URL || "http://localhost:5173",
   databaseUrl: process.env.DATABASE_URL,
   jwtSecret: process.env.JWT_SECRET,
-  pistonApiUrl: process.env.PISTON_API_URL || "https://emkc.org/api/v2/piston/execute",
+  onlineCompilerApiUrl:
+    process.env.ONLINECOMPILER_API_URL || "https://api.onlinecompiler.io/api/run-code/",
+  onlineCompilerApiKey: process.env.ONLINECOMPILER_API_KEY || "",
   adminUsername: process.env.ADMIN_USERNAME || "adminlogin",
   adminPassword: process.env.ADMIN_PASSWORD || "sarcstar_r9",
   adminDisplayName: process.env.ADMIN_DISPLAY_NAME || "Sarcstar Admin"
