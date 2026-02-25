@@ -1,6 +1,6 @@
 import { pool } from "../db/pool.js";
-import { runCode } from "../services/judge0.js";
-import { getLanguageConfig, getResultOutput, mapJudge0Status } from "../utils/submission.js";
+import { runCode } from "../services/piston.js";
+import { getLanguageConfig, mapExecutionVerdict } from "../utils/submission.js";
 
 export async function createSubmission(req, res) {
   const { problemId, language, sourceCode } = req.body;
@@ -31,7 +31,7 @@ export async function createSubmission(req, res) {
   );
 
   const submission = insertSubmission.rows[0];
-  const { judge0Id } = getLanguageConfig(language);
+  const { executorLanguage, version } = getLanguageConfig(language);
 
   let finalVerdict = "Accepted";
   let maxTime = 0;
@@ -43,20 +43,20 @@ export async function createSubmission(req, res) {
       currentTestCaseId = testCase.id;
       const result = await runCode({
         sourceCode,
-        languageId: judge0Id,
-        stdin: testCase.input,
-        expectedOutput: testCase.expected_output
+        language: executorLanguage,
+        version,
+        stdin: testCase.input
       });
-      const actualOutput = getResultOutput(result);
+      const actualOutput = result.run?.stdout || result.run?.output || result.run?.stderr || "";
 
-      const verdict = mapJudge0Status(
-        result.status_id,
+      const verdict = mapExecutionVerdict(
+        result,
         actualOutput,
         testCase.expected_output
       );
 
-      maxTime = Math.max(maxTime, Math.round(Number(result.time || 0) * 1000));
-      maxMemory = Math.max(maxMemory, Number(result.memory || 0));
+      maxTime = Math.max(maxTime, Math.round(Number(result.run?.cpu_time || 0)));
+      maxMemory = Math.max(maxMemory, Number(result.run?.memory || 0));
 
       await pool.query(
         `INSERT INTO submission_test_results
@@ -68,8 +68,8 @@ export async function createSubmission(req, res) {
           verdict,
           actualOutput,
           testCase.expected_output,
-          Math.round(Number(result.time || 0) * 1000),
-          Number(result.memory || 0)
+          Math.round(Number(result.run?.cpu_time || 0)),
+          Number(result.run?.memory || 0)
         ]
       );
 
