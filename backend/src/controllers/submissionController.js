@@ -36,9 +36,11 @@ export async function createSubmission(req, res) {
   let finalVerdict = "Accepted";
   let maxTime = 0;
   let maxMemory = 0;
+  let currentTestCaseId = null;
 
   try {
     for (const testCase of testsResult.rows) {
+      currentTestCaseId = testCase.id;
       const result = await runCode({
         sourceCode,
         languageId: judge0Id,
@@ -77,7 +79,25 @@ export async function createSubmission(req, res) {
       }
     }
   } catch (error) {
-    finalVerdict = "Runtime Error";
+    console.error("Submission judge failure:", error);
+    finalVerdict = "Judge Error";
+
+    if (currentTestCaseId) {
+      await pool.query(
+        `INSERT INTO submission_test_results
+         (submission_id, test_case_id, verdict, actual_output, expected_output, time_ms, memory_kb)
+         VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+        [
+          submission.id,
+          currentTestCaseId,
+          "Judge Error",
+          error.message,
+          "",
+          0,
+          0
+        ]
+      );
+    }
   }
 
   await pool.query(
