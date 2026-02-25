@@ -1,7 +1,8 @@
 import { env } from "../config/env.js";
 
 export async function runCode({ sourceCode, compiler, stdin }) {
-  const response = await fetch(env.onlineCompilerApiUrl, {
+  const url = env.onlineCompilerApiUrl.replace(/\/+$/, "");
+  const response = await fetch(url, {
     method: "POST",
     headers: {
       Accept: "*/*",
