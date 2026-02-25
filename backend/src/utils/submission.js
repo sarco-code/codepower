@@ -1,50 +1,56 @@
+const statusMap = {
+  3: "Accepted",
+  4: "Wrong Answer",
+  5: "Time Limit Exceeded",
+  6: "Compilation Error",
+  7: "Runtime Error",
+  8: "Runtime Error",
+  9: "Runtime Error",
+  10: "Runtime Error",
+  11: "Runtime Error",
+  12: "Runtime Error",
+  13: "Judge Error",
+  14: "Judge Error"
+};
+
 export function normalizeText(value) {
   return (value || "").replace(/\r\n/g, "\n").trimEnd();
 }
 
-export function mapExecutionVerdict(result, actualOutput, expectedOutput) {
-  if (!result || !result.run) {
-    return "Judge Error";
+export function mapJudge0Status(statusId, actualOutput, expectedOutput) {
+  if (statusId === 3 || statusId === 4) {
+    return normalizeText(actualOutput) === normalizeText(expectedOutput)
+      ? "Accepted"
+      : "Wrong Answer";
   }
 
-  if (result.run.status === "TO") {
-    return "Time Limit Exceeded";
-  }
-
-  if (result.compile && (result.compile.code !== 0 || result.compile.status)) {
-    return "Compilation Error";
-  }
-
-  if (result.run.code !== 0 || result.run.signal || result.run.status === "RE" || result.run.status === "SG") {
-    return "Runtime Error";
-  }
-
-  return normalizeText(actualOutput) === normalizeText(expectedOutput)
-    ? "Accepted"
-    : "Wrong Answer";
+  return statusMap[statusId] || "Runtime Error";
 }
 
-function looksLikeRuntimeError(output) {
-  const text = normalizeText(output).toLowerCase();
-  return [
-    "traceback",
-    "exception in thread",
-    "segmentation fault",
-    "floating point exception",
-    "runtime error",
-    "zerodivisionerror",
-    "indexerror",
-    "keyerror",
-    "typeerror",
-    "valueerror",
-    "syntax error"
-  ].some((pattern) => text.includes(pattern));
+export function getResultOutput(result) {
+  if (typeof result.stdout === "string" && result.stdout.length > 0) {
+    return result.stdout;
+  }
+
+  if (typeof result.compile_output === "string" && result.compile_output.length > 0) {
+    return result.compile_output;
+  }
+
+  if (typeof result.stderr === "string" && result.stderr.length > 0) {
+    return result.stderr;
+  }
+
+  if (typeof result.message === "string" && result.message.length > 0) {
+    return result.message;
+  }
+
+  return "";
 }
 
 export function getLanguageConfig(language) {
   if (language === "python") {
-    return { executorLanguage: "python", version: "3.10.0", monaco: "python" };
+    return { judge0Id: 71, monaco: "python" };
   }
 
-  return { executorLanguage: "c++", version: "10.2.0", monaco: "cpp" };
+  return { judge0Id: 54, monaco: "cpp" };
 }
