@@ -191,8 +191,10 @@ export async function getContest(req, res) {
        JOIN contest_problems cp ON cp.problem_id = s.problem_id
        JOIN users u ON u.id = s.user_id
        WHERE cp.contest_id = $1
+         AND s.created_at >= $2
+         AND s.created_at <= $3
        ORDER BY s.created_at ASC, s.id ASC`,
-      [id]
+      [id, contest.starts_at, contest.ends_at]
     )
   ]);
 
