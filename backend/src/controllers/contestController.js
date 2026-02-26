@@ -139,6 +139,35 @@ function buildStandings(contest, problems, participants, submissions) {
     }));
 }
 
+function mergeParticipants(participants, submissions) {
+  const merged = new Map(
+    participants.map((participant) => [
+      participant.id,
+      {
+        ...participant,
+        status: participant.status || "active",
+        notes: participant.notes || ""
+      }
+    ])
+  );
+
+  for (const submission of submissions) {
+    if (merged.has(submission.user_id)) continue;
+    merged.set(submission.user_id, {
+      id: submission.user_id,
+      username: submission.username,
+      display_name: submission.display_name,
+      status: "active",
+      notes: ""
+    });
+  }
+
+  return [...merged.values()].sort((a, b) => {
+    if (a.status !== b.status) return a.status === "cheater" ? 1 : -1;
+    return a.username.localeCompare(b.username);
+  });
+}
+
 export async function listContests(_req, res) {
   const { rows } = await pool.query(
     `SELECT c.id,
@@ -198,12 +227,13 @@ export async function getContest(req, res) {
     )
   ]);
 
-  const standings = buildStandings(contest, problems.rows, participants.rows, submissions.rows);
+  const mergedParticipants = mergeParticipants(participants.rows, submissions.rows);
+  const standings = buildStandings(contest, problems.rows, mergedParticipants, submissions.rows);
 
   return res.json({
     contest: {
       ...mapContest(contest, problems.rows),
-      participants: participants.rows,
+      participants: mergedParticipants,
       standings
     }
   });
