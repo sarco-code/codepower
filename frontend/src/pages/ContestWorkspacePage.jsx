@@ -405,8 +405,12 @@ function StandingsTable({ standings, problems }) {
               <tr key={row.userId} className="hover:bg-slate-800/35">
                 <td className="px-6 py-4 text-slate-100">{row.rank}</td>
                 <td className="px-6 py-4">
-                  <div className="font-medium text-cyan-300">{row.displayName}</div>
-                  <div className="mt-1 text-xs text-slate-500">@{row.username}</div>
+                  <div className={`font-medium ${row.status === "cheater" ? "text-slate-500 line-through" : "text-cyan-300"}`}>
+                    {row.displayName}
+                  </div>
+                  <div className={`mt-1 text-xs ${row.status === "cheater" ? "text-slate-600 line-through" : "text-slate-500"}`}>
+                    @{row.username}
+                  </div>
                 </td>
                 <td className="px-6 py-4 text-lg font-semibold text-slate-100">{row.score}</td>
                 <td className="px-6 py-4 text-slate-100">{row.acceptedCount}</td>

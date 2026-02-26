@@ -127,9 +127,9 @@ function buildStandings(contest, problems, participants, submissions) {
 
   return [...participantMap.values()]
     .sort((a, b) => {
+      if (a.status !== b.status) return a.status === "cheater" ? 1 : -1;
       if (b.score !== a.score) return b.score - a.score;
       if (a.penaltyMinutes !== b.penaltyMinutes) return a.penaltyMinutes - b.penaltyMinutes;
-      if (a.status !== b.status) return a.status === "active" ? -1 : 1;
       return a.username.localeCompare(b.username);
     })
     .map((row, index) => ({
