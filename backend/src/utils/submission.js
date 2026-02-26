@@ -94,10 +94,10 @@ export function getResultOutput(result) {
 
 export function getLanguageConfig(language) {
   if (language === "python") {
-    return { compiler: "python-3.9.7", monaco: "python" };
+    return { compiler: "python-3.14", monaco: "python" };
   }
 
-  return { compiler: "g++-4.9", monaco: "cpp" };
+  return { compiler: "g++-15", monaco: "cpp" };
 }
 
 export function getExecutionMetrics(result) {
