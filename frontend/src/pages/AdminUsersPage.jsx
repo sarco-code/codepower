@@ -45,6 +45,11 @@ export default function AdminUsersPage() {
     await loadUsers();
   }
 
+  async function handleDelete(user) {
+    await api.delete(`/admin/users/${user.id}`);
+    await loadUsers();
+  }
+
   if (!users) {
     return <Loader label="Loading users..." />;
   }
@@ -64,16 +69,24 @@ export default function AdminUsersPage() {
                     @{user.username} • {user.email} • {formatDate(user.created_at)}
                   </p>
                 </div>
-                <button
-                  onClick={() => toggleRole(user)}
-                  className={`rounded-2xl px-4 py-2 text-sm ${
-                    user.role === "admin"
-                      ? "border border-amber-500/20 bg-amber-500/10 text-amber-300"
-                      : "border border-slate-700 text-slate-200"
-                  }`}
-                >
-                  {user.role === "admin" ? "Make User" : "Make Admin"}
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => toggleRole(user)}
+                    className={`rounded-2xl px-4 py-2 text-sm ${
+                      user.role === "admin"
+                        ? "border border-amber-500/20 bg-amber-500/10 text-amber-300"
+                        : "border border-slate-700 text-slate-200"
+                    }`}
+                  >
+                    {user.role === "admin" ? "Make User" : "Make Admin"}
+                  </button>
+                  <button
+                    onClick={() => handleDelete(user)}
+                    className="rounded-2xl border border-rose-500/20 bg-rose-500/10 px-4 py-2 text-sm text-rose-300"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             </div>
           ))}
@@ -84,8 +97,16 @@ export default function AdminUsersPage() {
         <p className="text-xs uppercase tracking-[0.28em] text-slate-500">Create account</p>
         <h2 className="mt-2 text-2xl font-semibold text-slate-100">Add Admin</h2>
         <form onSubmit={handleCreateAdmin} className="mt-6 space-y-4">
-          <Field label="Username" value={form.username} onChange={(value) => setForm((current) => ({ ...current, username: value }))} />
-          <Field label="Email" value={form.email} onChange={(value) => setForm((current) => ({ ...current, email: value }))} />
+          <Field
+            label="Username"
+            value={form.username}
+            onChange={(value) => setForm((current) => ({ ...current, username: value }))}
+          />
+          <Field
+            label="Email"
+            value={form.email}
+            onChange={(value) => setForm((current) => ({ ...current, email: value }))}
+          />
           <Field
             label="Display Name"
             value={form.displayName}

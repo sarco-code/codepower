@@ -19,6 +19,7 @@ export function aggregateProblem(problemRow, testCaseRows = []) {
       input: row.input,
       expectedOutput: row.expected_output,
       isSample: row.is_sample,
+      sampleType: row.sample_type || "worked",
       sortOrder: row.sort_order
     }))
   };

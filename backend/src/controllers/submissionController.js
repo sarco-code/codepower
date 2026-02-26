@@ -144,6 +144,11 @@ export async function createSubmission(req, res) {
     [problemId]
   );
 
+  const contestMembership = await pool.query(
+    "SELECT contest_id FROM contest_problems WHERE problem_id = $1",
+    [problemId]
+  );
+
   if (!testsResult.rows.length) {
     return res.status(400).json({ message: "Problem has no test cases." });
   }
@@ -161,6 +166,16 @@ export async function createSubmission(req, res) {
     );
 
     const submission = insertSubmission.rows[0];
+
+    for (const membership of contestMembership.rows) {
+      await client.query(
+        `INSERT INTO contest_participants (contest_id, user_id, status, notes, updated_at)
+         VALUES ($1, $2, 'active', '', NOW())
+         ON CONFLICT (contest_id, user_id)
+         DO UPDATE SET updated_at = NOW()`,
+        [membership.contest_id, req.user.id]
+      );
+    }
 
     for (const testCase of testsResult.rows) {
       await client.query(

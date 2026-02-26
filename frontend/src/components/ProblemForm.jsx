@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const blankTest = { input: "", expectedOutput: "", isSample: false };
+const blankTest = { input: "", expectedOutput: "", isSample: false, sampleType: "worked" };
 
 const initialState = {
   slug: "",
@@ -27,7 +27,8 @@ export default function ProblemForm({ initialValue, onSubmit, submitting, onCanc
             initialValue.testCases?.map((item) => ({
               input: item.input,
               expectedOutput: item.expectedOutput,
-              isSample: item.isSample
+              isSample: item.isSample,
+              sampleType: item.sampleType || "worked"
             })) || [{ ...blankTest }]
         }
       : initialState
@@ -130,6 +131,21 @@ export default function ProblemForm({ initialValue, onSubmit, submitting, onCanc
                 />
                 Mark as sample test
               </label>
+              {testCase.isSample && (
+                <div className="grid gap-3 md:grid-cols-2">
+                  <label className="space-y-2 text-sm text-slate-300">
+                    <span>Sample Type</span>
+                    <select
+                      value={testCase.sampleType}
+                      onChange={(event) => updateTestCase(index, "sampleType", event.target.value)}
+                      className="w-full rounded-2xl border border-slate-800 bg-slate-950/70 px-4 py-3 text-slate-100 outline-none transition focus:border-sky-500"
+                    >
+                      <option value="worked">Worked Example</option>
+                      <option value="failed">Failed Example</option>
+                    </select>
+                  </label>
+                </div>
+              )}
             </div>
           ))}
         </div>

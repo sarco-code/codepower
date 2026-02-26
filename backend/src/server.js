@@ -87,6 +87,11 @@ async function ensureJudgeQueueSchema() {
   `);
 
   await pool.query(`
+    ALTER TABLE contest_problems
+    ADD COLUMN IF NOT EXISTS points INTEGER NOT NULL DEFAULT 10;
+  `);
+
+  await pool.query(`
     UPDATE submission_judge_jobs
     SET status = 'queued', started_at = NULL
     WHERE status = 'processing';

@@ -55,6 +55,16 @@ export default function AdminContestsPage() {
     }
   }
 
+  async function markCheater(contestId, userId, currentStatus) {
+    await api.patch(`/contests/${contestId}/participants/${userId}`, {
+      status: currentStatus === "cheater" ? "active" : "cheater"
+    });
+    await loadData();
+    if (editingContest?.id === contestId) {
+      await handleEdit(contestId);
+    }
+  }
+
   if (!contests) {
     return <Loader label="Loading contests admin..." />;
   }
@@ -74,7 +84,7 @@ export default function AdminContestsPage() {
                 <div>
                   <p className="text-sm font-medium text-slate-200">{contest.title}</p>
                   <p className="mt-1 text-xs text-slate-500">
-                    {formatDate(contest.startsAt)} • {contest.problemCount} problems
+                    {formatDate(contest.startsAt)} • {contest.problemCount} problems • {contest.cheaterCount || 0} cheaters
                   </p>
                 </div>
                 <div className="flex gap-2">
@@ -122,6 +132,42 @@ export default function AdminContestsPage() {
           submitting={saving}
           onCancel={() => setEditingContest(null)}
         />
+        {editingContest && (
+          <div className="mt-6 rounded-3xl border border-slate-800 bg-slate-950/60 p-5">
+            <div className="mb-4">
+              <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Participants</p>
+              <h3 className="mt-2 text-lg font-semibold text-slate-100">Cheater Control</h3>
+            </div>
+            <div className="space-y-3">
+              {(editingContest.participants || []).length === 0 && (
+                <p className="text-sm text-slate-500">No tracked participants yet.</p>
+              )}
+              {(editingContest.participants || []).map((participant) => (
+                <div
+                  key={participant.id}
+                  className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-800 bg-slate-900/70 px-4 py-3"
+                >
+                  <div>
+                    <p className="text-sm font-medium text-slate-200">{participant.display_name}</p>
+                    <p className="mt-1 text-xs text-slate-500">
+                      @{participant.username} • {participant.status}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => markCheater(editingContest.id, participant.id, participant.status)}
+                    className={`rounded-2xl px-4 py-2 text-sm ${
+                      participant.status === "cheater"
+                        ? "border border-emerald-500/20 bg-emerald-500/10 text-emerald-300"
+                        : "border border-rose-500/20 bg-rose-500/10 text-rose-300"
+                    }`}
+                  >
+                    {participant.status === "cheater" ? "Mark Active" : "Mark Cheater"}
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </section>
     </div>
   );

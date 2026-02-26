@@ -34,7 +34,7 @@ export async function getProblem(req, res) {
 
   const canViewHiddenTests = req.user?.role === "admin";
   const tests = await pool.query(
-    `SELECT id, input, expected_output, is_sample, sort_order
+    `SELECT id, input, expected_output, is_sample, sample_type, sort_order
      FROM problem_test_cases
      WHERE problem_id = $1
        AND ($2::boolean = TRUE OR is_sample = TRUE)
@@ -92,16 +92,23 @@ export async function createProblem(req, res) {
     for (let index = 0; index < testCases.length; index += 1) {
       const testCase = testCases[index];
       await client.query(
-        `INSERT INTO problem_test_cases (problem_id, input, expected_output, is_sample, sort_order)
-         VALUES ($1, $2, $3, $4, $5)`,
-        [problem.id, testCase.input, testCase.expectedOutput, Boolean(testCase.isSample), index]
+        `INSERT INTO problem_test_cases (problem_id, input, expected_output, is_sample, sample_type, sort_order)
+         VALUES ($1, $2, $3, $4, $5, $6)`,
+        [
+          problem.id,
+          testCase.input,
+          testCase.expectedOutput,
+          Boolean(testCase.isSample),
+          testCase.sampleType || "worked",
+          index
+        ]
       );
     }
 
     await client.query("COMMIT");
 
     const tests = await client.query(
-      "SELECT id, input, expected_output, is_sample, sort_order FROM problem_test_cases WHERE problem_id = $1 ORDER BY sort_order ASC, id ASC",
+      "SELECT id, input, expected_output, is_sample, sample_type, sort_order FROM problem_test_cases WHERE problem_id = $1 ORDER BY sort_order ASC, id ASC",
       [problem.id]
     );
 
@@ -177,16 +184,23 @@ export async function updateProblem(req, res) {
     for (let index = 0; index < testCases.length; index += 1) {
       const testCase = testCases[index];
       await client.query(
-        `INSERT INTO problem_test_cases (problem_id, input, expected_output, is_sample, sort_order)
-         VALUES ($1, $2, $3, $4, $5)`,
-        [id, testCase.input, testCase.expectedOutput, Boolean(testCase.isSample), index]
+        `INSERT INTO problem_test_cases (problem_id, input, expected_output, is_sample, sample_type, sort_order)
+         VALUES ($1, $2, $3, $4, $5, $6)`,
+        [
+          id,
+          testCase.input,
+          testCase.expectedOutput,
+          Boolean(testCase.isSample),
+          testCase.sampleType || "worked",
+          index
+        ]
       );
     }
 
     await client.query("COMMIT");
 
     const tests = await client.query(
-      "SELECT id, input, expected_output, is_sample, sort_order FROM problem_test_cases WHERE problem_id = $1 ORDER BY sort_order ASC, id ASC",
+      "SELECT id, input, expected_output, is_sample, sample_type, sort_order FROM problem_test_cases WHERE problem_id = $1 ORDER BY sort_order ASC, id ASC",
       [id]
     );
 

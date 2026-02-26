@@ -123,10 +123,29 @@ export default function ProblemDetailPage() {
             <InfoCard title="Explanation" body={problem.explanation || "No editorial note provided."} />
           </div>
 
-          <div className="mt-8 grid gap-5 md:grid-cols-2">
-            <SampleBlock label="Sample Input" value={problem.sampleInput} />
-            <SampleBlock label="Sample Output" value={problem.sampleOutput} />
-          </div>
+          {problem.testCases?.some((testCase) => testCase.isSample) ? (
+            <div className="mt-8 grid gap-5 md:grid-cols-2">
+              {problem.testCases
+                .filter((testCase) => testCase.isSample)
+                .map((testCase, index) => (
+                  <div key={testCase.id} className="space-y-5">
+                    <SampleBlock
+                      label={`${testCase.sampleType === "failed" ? "Failed" : "Worked"} Input #${index + 1}`}
+                      value={testCase.input}
+                    />
+                    <SampleBlock
+                      label={`${testCase.sampleType === "failed" ? "Failed" : "Worked"} Output #${index + 1}`}
+                      value={testCase.expectedOutput}
+                    />
+                  </div>
+                ))}
+            </div>
+          ) : (
+            <div className="mt-8 grid gap-5 md:grid-cols-2">
+              <SampleBlock label="Sample Input" value={problem.sampleInput} />
+              <SampleBlock label="Sample Output" value={problem.sampleOutput} />
+            </div>
+          )}
         </div>
 
         <div className="space-y-4">

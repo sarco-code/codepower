@@ -15,25 +15,38 @@ export default function ContestForm({ problems, initialValue, onSubmit, submitti
           description: initialValue.description,
           startsAt: toDateTimeLocal(initialValue.startsAt),
           endsAt: toDateTimeLocal(initialValue.endsAt),
-          problemIds: initialValue.problems?.map((problem) => problem.id) || []
+          problemEntries:
+            initialValue.problems?.map((problem) => ({
+              problemId: problem.id,
+              points: problem.points || 10
+            })) || []
         }
       : {
           title: "",
           description: "",
           startsAt: "",
           endsAt: "",
-          problemIds: []
+          problemEntries: []
         }
   );
 
-  const selectedCount = useMemo(() => form.problemIds.length, [form.problemIds.length]);
+  const selectedCount = useMemo(() => form.problemEntries.length, [form.problemEntries.length]);
 
   function toggleProblem(problemId) {
     setForm((current) => ({
       ...current,
-      problemIds: current.problemIds.includes(problemId)
-        ? current.problemIds.filter((id) => id !== problemId)
-        : [...current.problemIds, problemId]
+      problemEntries: current.problemEntries.some((entry) => entry.problemId === problemId)
+        ? current.problemEntries.filter((entry) => entry.problemId !== problemId)
+        : [...current.problemEntries, { problemId, points: 10 }]
+    }));
+  }
+
+  function updatePoints(problemId, points) {
+    setForm((current) => ({
+      ...current,
+      problemEntries: current.problemEntries.map((entry) =>
+        entry.problemId === problemId ? { ...entry, points: Number(points || 0) } : entry
+      )
     }));
   }
 
@@ -44,7 +57,11 @@ export default function ContestForm({ problems, initialValue, onSubmit, submitti
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      <Field label="Title" value={form.title} onChange={(value) => setForm((current) => ({ ...current, title: value }))} />
+      <Field
+        label="Title"
+        value={form.title}
+        onChange={(value) => setForm((current) => ({ ...current, title: value }))}
+      />
       <TextArea
         label="Description"
         value={form.description}
@@ -73,24 +90,41 @@ export default function ContestForm({ problems, initialValue, onSubmit, submitti
           </div>
         </div>
         <div className="grid gap-3">
-          {problems.map((problem) => (
-            <label
-              key={problem.id}
-              className="flex items-center justify-between rounded-2xl border border-slate-800 bg-slate-900/70 px-4 py-3"
-            >
-              <div>
-                <p className="text-sm font-medium text-slate-200">{problem.title}</p>
-                <p className="mt-1 text-xs text-slate-500">
-                  #{problem.id} • {problem.difficulty}
-                </p>
+          {problems.map((problem, index) => {
+            const selected = form.problemEntries.find((entry) => entry.problemId === problem.id);
+
+            return (
+              <div
+                key={problem.id}
+                className="rounded-2xl border border-slate-800 bg-slate-900/70 px-4 py-3"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <label className="flex flex-1 items-center gap-3">
+                    <input
+                      type="checkbox"
+                      checked={Boolean(selected)}
+                      onChange={() => toggleProblem(problem.id)}
+                    />
+                    <div>
+                      <p className="text-sm font-medium text-slate-200">{problem.title}</p>
+                      <p className="mt-1 text-xs text-slate-500">
+                        #{index + 1} • {problem.difficulty}
+                      </p>
+                    </div>
+                  </label>
+                  <div className="w-28">
+                    <Field
+                      label="Points"
+                      type="number"
+                      value={selected?.points ?? 10}
+                      onChange={(value) => updatePoints(problem.id, value)}
+                      disabled={!selected}
+                    />
+                  </div>
+                </div>
               </div>
-              <input
-                type="checkbox"
-                checked={form.problemIds.includes(problem.id)}
-                onChange={() => toggleProblem(problem.id)}
-              />
-            </label>
-          ))}
+            );
+          })}
         </div>
       </div>
 
@@ -116,15 +150,16 @@ export default function ContestForm({ problems, initialValue, onSubmit, submitti
   );
 }
 
-function Field({ label, value, onChange, type = "text" }) {
+function Field({ label, value, onChange, type = "text", disabled = false }) {
   return (
     <label className="space-y-2 text-sm text-slate-300">
       <span>{label}</span>
       <input
         type={type}
         value={value}
+        disabled={disabled}
         onChange={(event) => onChange(event.target.value)}
-        className="w-full rounded-2xl border border-slate-800 bg-slate-950/70 px-4 py-3 text-slate-100 outline-none transition focus:border-sky-500"
+        className="w-full rounded-2xl border border-slate-800 bg-slate-950/70 px-4 py-3 text-slate-100 outline-none transition focus:border-sky-500 disabled:opacity-50"
       />
     </label>
   );

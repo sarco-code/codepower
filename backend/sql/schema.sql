@@ -93,6 +93,7 @@ CREATE TABLE IF NOT EXISTS contests (
 CREATE TABLE IF NOT EXISTS contest_problems (
   contest_id BIGINT NOT NULL REFERENCES contests(id) ON DELETE CASCADE,
   problem_id BIGINT NOT NULL REFERENCES problems(id) ON DELETE CASCADE,
+  points INTEGER NOT NULL DEFAULT 10,
   problem_order INTEGER NOT NULL DEFAULT 0,
   PRIMARY KEY (contest_id, problem_id)
 );

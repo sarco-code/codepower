@@ -71,3 +71,27 @@ export async function updateUserRole(req, res) {
 
   return res.json({ user: rows[0] });
 }
+
+export async function deleteUser(req, res) {
+  const { id } = req.params;
+
+  if (req.user.id === id) {
+    return res.status(400).json({ message: "You cannot delete your own account." });
+  }
+
+  const existing = await pool.query(
+    "SELECT id, username, role FROM users WHERE id = $1",
+    [id]
+  );
+
+  if (!existing.rows[0]) {
+    return res.status(404).json({ message: "User not found." });
+  }
+
+  if (existing.rows[0].username === "adminlogin") {
+    return res.status(400).json({ message: "Primary admin account cannot be deleted." });
+  }
+
+  await pool.query("DELETE FROM users WHERE id = $1", [id]);
+  return res.status(204).send();
+}
