@@ -49,6 +49,44 @@ async function ensureJudgeQueueSchema() {
   `);
 
   await pool.query(`
+    ALTER TABLE problem_test_cases
+    ADD COLUMN IF NOT EXISTS sample_type VARCHAR(20) NOT NULL DEFAULT 'worked';
+  `);
+
+  await pool.query(`
+    DO $$
+    BEGIN
+      IF NOT EXISTS (
+        SELECT 1
+        FROM pg_constraint
+        WHERE conname = 'problem_test_cases_sample_type_check'
+      ) THEN
+        ALTER TABLE problem_test_cases
+        ADD CONSTRAINT problem_test_cases_sample_type_check
+        CHECK (sample_type IN ('worked', 'failed'));
+      END IF;
+    END $$;
+  `);
+
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS contest_participants (
+      contest_id BIGINT NOT NULL REFERENCES contests(id) ON DELETE CASCADE,
+      user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      status VARCHAR(20) NOT NULL DEFAULT 'active'
+        CHECK (status IN ('active', 'cheater')),
+      notes TEXT NOT NULL DEFAULT '',
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      PRIMARY KEY (contest_id, user_id)
+    );
+  `);
+
+  await pool.query(`
+    CREATE INDEX IF NOT EXISTS idx_contest_participants_contest_id
+    ON contest_participants(contest_id);
+  `);
+
+  await pool.query(`
     UPDATE submission_judge_jobs
     SET status = 'queued', started_at = NULL
     WHERE status = 'processing';

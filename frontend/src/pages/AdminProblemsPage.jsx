@@ -63,7 +63,7 @@ export default function AdminProblemsPage() {
         </p>
 
         <div className="mt-6 space-y-3">
-          {problems.map((problem) => (
+          {problems.map((problem, index) => (
             <div
               key={problem.id}
               className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-800 bg-slate-900/70 px-4 py-4"
@@ -71,7 +71,7 @@ export default function AdminProblemsPage() {
               <div>
                 <p className="text-sm font-medium text-slate-200">{problem.title}</p>
                 <p className="mt-1 text-xs text-slate-500">
-                  #{problem.id} • {problem.difficulty}
+                  #{index + 1} • {problem.difficulty}
                 </p>
               </div>
               <div className="flex gap-2">

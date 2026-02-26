@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS problem_test_cases (
   input TEXT NOT NULL,
   expected_output TEXT NOT NULL,
   is_sample BOOLEAN NOT NULL DEFAULT FALSE,
+  sample_type VARCHAR(20) NOT NULL DEFAULT 'worked' CHECK (sample_type IN ('worked', 'failed')),
   sort_order INTEGER NOT NULL DEFAULT 0
 );
 
@@ -96,7 +97,18 @@ CREATE TABLE IF NOT EXISTS contest_problems (
   PRIMARY KEY (contest_id, problem_id)
 );
 
+CREATE TABLE IF NOT EXISTS contest_participants (
+  contest_id BIGINT NOT NULL REFERENCES contests(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  status VARCHAR(20) NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'cheater')),
+  notes TEXT NOT NULL DEFAULT '',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  PRIMARY KEY (contest_id, user_id)
+);
+
 CREATE INDEX IF NOT EXISTS idx_submissions_user_id ON submissions(user_id);
 CREATE INDEX IF NOT EXISTS idx_submissions_problem_id ON submissions(problem_id);
 CREATE INDEX IF NOT EXISTS idx_problem_test_cases_problem_id ON problem_test_cases(problem_id);
 CREATE INDEX IF NOT EXISTS idx_submission_judge_jobs_status_id ON submission_judge_jobs(status, id);
+CREATE INDEX IF NOT EXISTS idx_contest_participants_contest_id ON contest_participants(contest_id);

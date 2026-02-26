@@ -7,7 +7,7 @@ export default function ProblemTable({ problems }) {
         <table className="min-w-full divide-y divide-slate-800 text-sm">
           <thead className="bg-slate-950/70 text-left text-xs uppercase tracking-[0.24em] text-slate-500">
             <tr>
-              <th className="px-6 py-4">ID</th>
+              <th className="px-6 py-4">No</th>
               <th className="px-6 py-4">Title</th>
               <th className="px-6 py-4">Difficulty</th>
               <th className="px-6 py-4">Tags</th>
@@ -15,9 +15,9 @@ export default function ProblemTable({ problems }) {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-800 text-slate-300">
-            {problems.map((problem) => (
+            {problems.map((problem, index) => (
               <tr key={problem.id} className="hover:bg-slate-800/35">
-                <td className="px-6 py-4 text-slate-500">{problem.id}</td>
+                <td className="px-6 py-4 text-slate-500">{index + 1}</td>
                 <td className="px-6 py-4">
                   <Link
                     to={`/problems/${problem.id}`}
