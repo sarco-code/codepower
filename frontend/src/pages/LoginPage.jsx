@@ -18,7 +18,7 @@ export default function LoginPage() {
       await login(form);
       navigate("/");
     } catch (requestError) {
-      setError(requestError.response?.data?.message || "Login failed.");
+      setError(requestError.response?.data?.message || "Kirish muvaffaqiyatsiz tugadi.");
     } finally {
       setSubmitting(false);
     }
@@ -31,29 +31,29 @@ export default function LoginPage() {
           <div className="hidden border-r border-slate-800 bg-gradient-to-br from-sky-500/15 via-slate-950 to-slate-950 p-10 lg:block">
             <p className="text-xs uppercase tracking-[0.35em] text-sky-300">Sarcstar Judge</p>
             <h1 className="mt-6 max-w-md text-5xl font-semibold leading-tight text-slate-100">
-              Train with real verdicts, contests, and a serious dark-mode workflow.
+              Haqiqiy natijalar, kontestlar va jiddiy qorong'i rejim ish muhiti bilan shug'ullaning.
             </h1>
             <p className="mt-6 max-w-lg text-base leading-7 text-slate-400">
-              React, Tailwind, Monaco, PostgreSQL, and a cloud judge engine in a single coding arena with admin
-              tooling for problem creation and testcase management.
+              React, Tailwind, Monaco, PostgreSQL va bulutli tekshiruvchi yagona platformada. Adminlar masala yaratishi
+              va testlarni boshqarishi mumkin.
             </p>
           </div>
 
           <div className="p-8 sm:p-10">
-            <p className="text-sm uppercase tracking-[0.3em] text-slate-500">Welcome back</p>
-            <h2 className="mt-4 text-3xl font-semibold text-slate-50">Login</h2>
+            <p className="text-sm uppercase tracking-[0.3em] text-slate-500">Qaytganingiz bilan</p>
+            <h2 className="mt-4 text-3xl font-semibold text-slate-50">Kirish</h2>
             <p className="mt-3 text-sm leading-6 text-slate-400">
-              Use your account, or the backend-configured admin credentials.
+              Akkauntingiz bilan yoki backendda belgilangan admin ma'lumotlari bilan kiring.
             </p>
 
             <form onSubmit={handleSubmit} className="mt-8 space-y-5">
               <Field
-                label="Username"
+                label="Foydalanuvchi nomi"
                 value={form.username}
                 onChange={(value) => setForm((current) => ({ ...current, username: value }))}
               />
               <Field
-                label="Password"
+                label="Parol"
                 type="password"
                 value={form.password}
                 onChange={(value) => setForm((current) => ({ ...current, password: value }))}
@@ -66,14 +66,14 @@ export default function LoginPage() {
                 disabled={submitting}
                 className="w-full rounded-2xl bg-sky-400 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-sky-300 disabled:opacity-60"
               >
-                {submitting ? "Signing in..." : "Login"}
+                {submitting ? "Kirilmoqda..." : "Kirish"}
               </button>
             </form>
 
             <p className="mt-6 text-sm text-slate-400">
-              Need an account?{" "}
+              Akkauntingiz yo'qmi?{" "}
               <Link to="/register" className="font-medium text-sky-300">
-                Register here
+                Ro'yxatdan o'ting
               </Link>
             </p>
           </div>

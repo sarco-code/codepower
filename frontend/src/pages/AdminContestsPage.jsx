@@ -41,7 +41,7 @@ export default function AdminContestsPage() {
       setEditingContest(null);
       await loadData();
     } catch (requestError) {
-      setError(requestError.response?.data?.message || "Failed to save contest.");
+      setError(requestError.response?.data?.message || "Kontestni saqlashda xato yuz berdi.");
     } finally {
       setSaving(false);
     }
@@ -66,14 +66,14 @@ export default function AdminContestsPage() {
   }
 
   if (!contests) {
-    return <Loader label="Loading contests admin..." />;
+    return <Loader label="Admin kontestlar yuklanmoqda..." />;
   }
 
   return (
     <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
       <section className="rounded-[32px] border border-slate-800 bg-slate-950/80 p-6 shadow-glow">
         <p className="text-xs uppercase tracking-[0.3em] text-amber-300">Admin</p>
-        <h1 className="mt-3 text-3xl font-semibold text-slate-50">Contest Management</h1>
+        <h1 className="mt-3 text-3xl font-semibold text-slate-50">Kontest boshqaruvi</h1>
         <div className="mt-6 space-y-3">
           {contests.map((contest) => (
             <div
@@ -84,7 +84,7 @@ export default function AdminContestsPage() {
                 <div>
                   <p className="text-sm font-medium text-slate-200">{contest.title}</p>
                   <p className="mt-1 text-xs text-slate-500">
-                    {formatDate(contest.startsAt)} • {contest.problemCount} problems • {contest.cheaterCount || 0} cheaters
+                    {formatDate(contest.startsAt)} • {contest.problemCount} ta masala • {contest.cheaterCount || 0} ta cheater
                   </p>
                 </div>
                 <div className="flex gap-2">
@@ -92,13 +92,13 @@ export default function AdminContestsPage() {
                     onClick={() => handleEdit(contest.id)}
                     className="rounded-2xl border border-slate-700 px-4 py-2 text-sm text-slate-200"
                   >
-                    Edit
+                    Tahrirlash
                   </button>
                   <button
                     onClick={() => handleDelete(contest.id)}
                     className="rounded-2xl border border-rose-500/20 bg-rose-500/10 px-4 py-2 text-sm text-rose-300"
                   >
-                    Delete
+                    O'chirish
                   </button>
                 </div>
               </div>
@@ -110,9 +110,9 @@ export default function AdminContestsPage() {
       <section className="rounded-[32px] border border-slate-800 bg-slate-950/80 p-6 shadow-glow">
         <div className="mb-6 flex items-center justify-between gap-4">
           <div>
-            <p className="text-xs uppercase tracking-[0.28em] text-slate-500">Editor</p>
+            <p className="text-xs uppercase tracking-[0.28em] text-slate-500">Muharrir</p>
             <h2 className="mt-2 text-2xl font-semibold text-slate-100">
-              {editingContest ? `Editing ${editingContest.title}` : "Create Contest"}
+              {editingContest ? `${editingContest.title} tahrirlanmoqda` : "Kontest yaratish"}
             </h2>
           </div>
           {editingContest && (
@@ -120,7 +120,7 @@ export default function AdminContestsPage() {
               onClick={() => setEditingContest(null)}
               className="rounded-2xl border border-slate-700 px-4 py-2 text-sm text-slate-200"
             >
-              New Contest
+              Yangi kontest
             </button>
           )}
         </div>
@@ -135,12 +135,12 @@ export default function AdminContestsPage() {
         {editingContest && (
           <div className="mt-6 rounded-3xl border border-slate-800 bg-slate-950/60 p-5">
             <div className="mb-4">
-              <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Participants</p>
-              <h3 className="mt-2 text-lg font-semibold text-slate-100">Cheater Control</h3>
+              <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Qatnashuvchilar</p>
+              <h3 className="mt-2 text-lg font-semibold text-slate-100">Cheater boshqaruvi</h3>
             </div>
             <div className="space-y-3">
               {(editingContest.participants || []).length === 0 && (
-                <p className="text-sm text-slate-500">No tracked participants yet.</p>
+                <p className="text-sm text-slate-500">Hali kuzatilgan qatnashuvchilar yo'q.</p>
               )}
               {(editingContest.participants || []).map((participant) => (
                 <div
@@ -161,7 +161,7 @@ export default function AdminContestsPage() {
                         : "border border-rose-500/20 bg-rose-500/10 text-rose-300"
                     }`}
                   >
-                    {participant.status === "cheater" ? "Mark Active" : "Mark Cheater"}
+                    {participant.status === "cheater" ? "Faol qilish" : "Cheater qilish"}
                   </button>
                 </div>
               ))}

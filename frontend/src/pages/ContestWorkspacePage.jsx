@@ -135,14 +135,14 @@ export default function ContestWorkspacePage() {
       setActiveTab("attempts");
     } catch (requestError) {
       setSubmissions((current) => current.filter((item) => item.id !== optimisticSubmission.id));
-      setError(requestError.response?.data?.message || "Submission failed.");
+      setError(requestError.response?.data?.message || "Yuborish muvaffaqiyatsiz tugadi.");
     } finally {
       setSubmitting(false);
     }
   }
 
   if (!contest) {
-    return <Loader label="Loading contest..." />;
+    return <Loader label="Kontest yuklanmoqda..." />;
   }
 
   return (
@@ -150,13 +150,13 @@ export default function ContestWorkspacePage() {
       <section className="rounded-[32px] border border-slate-800 bg-slate-950/80 p-6 shadow-glow">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-sky-300">Contest Workspace</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-sky-300">Kontest maydoni</p>
             <h1 className="mt-3 text-3xl font-semibold text-slate-50">{contest.title}</h1>
             <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-400">{contest.description}</p>
           </div>
           <div className="grid gap-2 rounded-3xl border border-slate-800 bg-slate-900/70 px-5 py-4 text-sm text-slate-300">
-            <p>Start: {formatDate(contest.startsAt)}</p>
-            <p>End: {formatDate(contest.endsAt)}</p>
+            <p>Boshlanishi: {formatDate(contest.startsAt)}</p>
+            <p>Tugashi: {formatDate(contest.endsAt)}</p>
             <p>Masalalar: {contest.problemCount}</p>
             {myStanding && <p>Reyting: #{myStanding.rank} • {myStanding.score} ball</p>}
           </div>
@@ -254,7 +254,7 @@ export default function ContestWorkspacePage() {
             <div className="p-6">
               <div className="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 px-2 pb-4">
                 <div>
-                  <p className="text-sm font-medium text-slate-200">Contest Editor</p>
+                  <p className="text-sm font-medium text-slate-200">Kontest muharriri</p>
                   <p className="text-xs text-slate-500">Tanlangan masala uchun yechim yuboring.</p>
                 </div>
                 <select
@@ -298,7 +298,7 @@ export default function ContestWorkspacePage() {
           {activeTab === "results" && (
             <div className="p-6">
               <div className="mb-4">
-                <p className="text-xs uppercase tracking-[0.28em] text-slate-500">Scoreboard</p>
+                <p className="text-xs uppercase tracking-[0.28em] text-slate-500">Natijalar jadvali</p>
                 <h3 className="mt-2 text-2xl font-semibold text-slate-100">Natijalar</h3>
               </div>
               <StandingsTable standings={contest.standings || []} problems={contest.problems || []} />
@@ -308,7 +308,7 @@ export default function ContestWorkspacePage() {
           {activeTab === "attempts" && (
             <div className="p-6">
               <div className="mb-4">
-                <p className="text-xs uppercase tracking-[0.28em] text-slate-500">History</p>
+                <p className="text-xs uppercase tracking-[0.28em] text-slate-500">Tarix</p>
                 <h3 className="mt-2 text-2xl font-semibold text-slate-100">Urinishlar</h3>
               </div>
               <SubmissionTable submissions={submissions} />
@@ -318,12 +318,12 @@ export default function ContestWorkspacePage() {
           {activeTab === "participants" && (
             <div className="p-6">
               <div className="mb-4">
-                <p className="text-xs uppercase tracking-[0.28em] text-slate-500">People</p>
+                <p className="text-xs uppercase tracking-[0.28em] text-slate-500">Ishtirokchilar</p>
                 <h3 className="mt-2 text-2xl font-semibold text-slate-100">Qatnashuvchilar</h3>
               </div>
               <div className="space-y-3">
                 {(contest.participants || []).length === 0 && (
-                  <p className="text-sm text-slate-500">Hali qatnashuvchilar yo‘q.</p>
+                  <p className="text-sm text-slate-500">Hali qatnashuvchilar yo'q.</p>
                 )}
                 {(contest.participants || []).map((participant) => (
                   <div
@@ -335,7 +335,7 @@ export default function ContestWorkspacePage() {
                       <p className="mt-1 text-xs text-slate-500">@{participant.username}</p>
                     </div>
                     <Badge tone={participant.status === "cheater" ? "danger" : "info"}>
-                      {participant.status === "cheater" ? "Cheater" : "Active"}
+                      {participant.status === "cheater" ? "Cheater" : "Faol"}
                     </Badge>
                   </div>
                 ))}

@@ -32,33 +32,44 @@ export default function AdminUsersPage() {
       setForm({ username: "", email: "", displayName: "", password: "" });
       await loadUsers();
     } catch (requestError) {
-      setError(requestError.response?.data?.message || "Failed to create admin.");
+      setError(requestError.response?.data?.message || "Admin yaratishda xato yuz berdi.");
     } finally {
       setSubmitting(false);
     }
   }
 
   async function toggleRole(user) {
-    await api.patch(`/admin/users/${user.id}/role`, {
-      role: user.role === "admin" ? "user" : "admin"
-    });
-    await loadUsers();
+    setError("");
+    try {
+      await api.patch(`/admin/users/${user.id}/role`, {
+        role: user.role === "admin" ? "user" : "admin"
+      });
+      await loadUsers();
+    } catch (requestError) {
+      setError(requestError.response?.data?.message || "Rolni o'zgartirishda xato yuz berdi.");
+    }
   }
 
   async function handleDelete(user) {
-    await api.delete(`/admin/users/${user.id}`);
-    await loadUsers();
+    setError("");
+    try {
+      await api.delete(`/admin/users/${user.id}`);
+      await loadUsers();
+    } catch (requestError) {
+      setError(requestError.response?.data?.message || "Foydalanuvchini o'chirishda xato yuz berdi.");
+    }
   }
 
   if (!users) {
-    return <Loader label="Loading users..." />;
+    return <Loader label="Foydalanuvchilar yuklanmoqda..." />;
   }
 
   return (
     <div className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
       <section className="rounded-[32px] border border-slate-800 bg-slate-950/80 p-6 shadow-glow">
         <p className="text-xs uppercase tracking-[0.3em] text-amber-300">Admin</p>
-        <h1 className="mt-3 text-3xl font-semibold text-slate-50">User Roles</h1>
+        <h1 className="mt-3 text-3xl font-semibold text-slate-50">Foydalanuvchi rollari</h1>
+        {error && <p className="mt-4 text-sm text-rose-400">{error}</p>}
         <div className="mt-6 space-y-3">
           {users.map((user) => (
             <div key={user.id} className="rounded-2xl border border-slate-800 bg-slate-900/70 px-4 py-4">
@@ -78,13 +89,13 @@ export default function AdminUsersPage() {
                         : "border border-slate-700 text-slate-200"
                     }`}
                   >
-                    {user.role === "admin" ? "Make User" : "Make Admin"}
+                    {user.role === "admin" ? "User qilish" : "Admin qilish"}
                   </button>
                   <button
                     onClick={() => handleDelete(user)}
                     className="rounded-2xl border border-rose-500/20 bg-rose-500/10 px-4 py-2 text-sm text-rose-300"
                   >
-                    Delete
+                    O'chirish
                   </button>
                 </div>
               </div>
@@ -94,11 +105,11 @@ export default function AdminUsersPage() {
       </section>
 
       <section className="rounded-[32px] border border-slate-800 bg-slate-950/80 p-6 shadow-glow">
-        <p className="text-xs uppercase tracking-[0.28em] text-slate-500">Create account</p>
-        <h2 className="mt-2 text-2xl font-semibold text-slate-100">Add Admin</h2>
+        <p className="text-xs uppercase tracking-[0.28em] text-slate-500">Akkaunt yaratish</p>
+        <h2 className="mt-2 text-2xl font-semibold text-slate-100">Admin qo'shish</h2>
         <form onSubmit={handleCreateAdmin} className="mt-6 space-y-4">
           <Field
-            label="Username"
+            label="Foydalanuvchi nomi"
             value={form.username}
             onChange={(value) => setForm((current) => ({ ...current, username: value }))}
           />
@@ -108,12 +119,12 @@ export default function AdminUsersPage() {
             onChange={(value) => setForm((current) => ({ ...current, email: value }))}
           />
           <Field
-            label="Display Name"
+            label="Ko'rinadigan ism"
             value={form.displayName}
             onChange={(value) => setForm((current) => ({ ...current, displayName: value }))}
           />
           <Field
-            label="Password"
+            label="Parol"
             type="password"
             value={form.password}
             onChange={(value) => setForm((current) => ({ ...current, password: value }))}
@@ -124,7 +135,7 @@ export default function AdminUsersPage() {
             disabled={submitting}
             className="rounded-2xl bg-sky-400 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-sky-300 disabled:opacity-60"
           >
-            {submitting ? "Creating..." : "Create Admin"}
+            {submitting ? "Yaratilmoqda..." : "Admin yaratish"}
           </button>
         </form>
       </section>

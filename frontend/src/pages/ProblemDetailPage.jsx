@@ -91,14 +91,14 @@ export default function ProblemDetailPage() {
       ]);
     } catch (requestError) {
       setSubmissions((current) => current.filter((item) => item.id !== optimisticSubmission.id));
-      setError(requestError.response?.data?.message || "Submission failed.");
+      setError(requestError.response?.data?.message || "Yuborish muvaffaqiyatsiz tugadi.");
     } finally {
       setSubmitting(false);
     }
   }
 
   if (!problem) {
-    return <Loader label="Loading problem..." />;
+    return <Loader label="Masala yuklanmoqda..." />;
   }
 
   return (
@@ -117,10 +117,10 @@ export default function ProblemDetailPage() {
           <p className="mt-4 whitespace-pre-wrap text-sm leading-7 text-slate-300">{problem.description}</p>
 
           <div className="mt-8 grid gap-5 md:grid-cols-2">
-            <InfoCard title="Constraints" body={problem.constraints} />
-            <InfoCard title="Input" body={problem.inputFormat} />
-            <InfoCard title="Output" body={problem.outputFormat} />
-            <InfoCard title="Explanation" body={problem.explanation || "No editorial note provided."} />
+            <InfoCard title="Cheklovlar" body={problem.constraints} />
+            <InfoCard title="Kirish" body={problem.inputFormat} />
+            <InfoCard title="Chiqish" body={problem.outputFormat} />
+            <InfoCard title="Izoh" body={problem.explanation || "Izoh berilmagan."} />
           </div>
 
           {problem.testCases?.some((testCase) => testCase.isSample) ? (
@@ -130,11 +130,11 @@ export default function ProblemDetailPage() {
                 .map((testCase, index) => (
                   <div key={testCase.id} className="space-y-5">
                     <SampleBlock
-                      label={`${testCase.sampleType === "failed" ? "Failed" : "Worked"} Input #${index + 1}`}
+                      label={`${testCase.sampleType === "failed" ? "Ishlamagan" : "Ishlagan"} kirish #${index + 1}`}
                       value={testCase.input}
                     />
                     <SampleBlock
-                      label={`${testCase.sampleType === "failed" ? "Failed" : "Worked"} Output #${index + 1}`}
+                      label={`${testCase.sampleType === "failed" ? "Ishlamagan" : "Ishlagan"} chiqish #${index + 1}`}
                       value={testCase.expectedOutput}
                     />
                   </div>
@@ -142,16 +142,16 @@ export default function ProblemDetailPage() {
             </div>
           ) : (
             <div className="mt-8 grid gap-5 md:grid-cols-2">
-              <SampleBlock label="Sample Input" value={problem.sampleInput} />
-              <SampleBlock label="Sample Output" value={problem.sampleOutput} />
+              <SampleBlock label="Namuna kirish" value={problem.sampleInput} />
+              <SampleBlock label="Namuna chiqish" value={problem.sampleOutput} />
             </div>
           )}
         </div>
 
         <div className="space-y-4">
           <div>
-            <p className="text-xs uppercase tracking-[0.28em] text-slate-500">History</p>
-            <h2 className="mt-2 text-2xl font-semibold text-slate-100">Your submissions</h2>
+            <p className="text-xs uppercase tracking-[0.28em] text-slate-500">Tarix</p>
+            <h2 className="mt-2 text-2xl font-semibold text-slate-100">Sizning yuborishlaringiz</h2>
           </div>
           <SubmissionTable submissions={submissions} />
         </div>
@@ -161,16 +161,16 @@ export default function ProblemDetailPage() {
         <div className="rounded-[32px] border border-slate-800 bg-slate-950/80 p-4 shadow-glow">
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 px-2 pb-4">
             <div>
-              <p className="text-sm font-medium text-slate-200">Code Editor</p>
-              <p className="text-xs text-slate-500">Monaco with C++ and Python templates.</p>
+              <p className="text-sm font-medium text-slate-200">Kod muharriri</p>
+              <p className="text-xs text-slate-500">Monaco muharriri C++ va Python shablonlari bilan.</p>
             </div>
             <select
               value={language}
               onChange={(event) => setLanguage(event.target.value)}
               className="rounded-2xl border border-slate-700 bg-slate-900 px-4 py-2 text-sm text-slate-100 outline-none"
             >
-              <option value="cpp">C++17</option>
-              <option value="python">Python 3</option>
+              <option value="cpp">C++</option>
+              <option value="python">Python</option>
             </select>
           </div>
 
@@ -197,7 +197,7 @@ export default function ProblemDetailPage() {
             disabled={submitting}
             className="w-full rounded-2xl bg-emerald-400 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-emerald-300 disabled:opacity-60"
           >
-            {submitting ? "Judging..." : "Submit Solution"}
+            {submitting ? "Tekshirilmoqda..." : "Yechimni yuborish"}
           </button>
         </div>
       </section>

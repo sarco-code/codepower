@@ -7,11 +7,11 @@ export default function ProblemTable({ problems }) {
         <table className="min-w-full divide-y divide-slate-800 text-sm">
           <thead className="bg-slate-950/70 text-left text-xs uppercase tracking-[0.24em] text-slate-500">
             <tr>
-              <th className="px-6 py-4">No</th>
-              <th className="px-6 py-4">Title</th>
-              <th className="px-6 py-4">Difficulty</th>
-              <th className="px-6 py-4">Tags</th>
-              <th className="px-6 py-4">Solved</th>
+              <th className="px-6 py-4">T/r</th>
+              <th className="px-6 py-4">Nomi</th>
+              <th className="px-6 py-4">Qiyinligi</th>
+              <th className="px-6 py-4">Teglar</th>
+              <th className="px-6 py-4">Yechilgan</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-800 text-slate-300">

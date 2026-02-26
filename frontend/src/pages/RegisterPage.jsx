@@ -23,7 +23,7 @@ export default function RegisterPage() {
       await register(form);
       navigate("/");
     } catch (requestError) {
-      setError(requestError.response?.data?.message || "Registration failed.");
+      setError(requestError.response?.data?.message || "Ro'yxatdan o'tish muvaffaqiyatsiz tugadi.");
     } finally {
       setSubmitting(false);
     }
@@ -32,19 +32,19 @@ export default function RegisterPage() {
   return (
     <div className="flex min-h-screen items-center justify-center px-4 py-10">
       <div className="w-full max-w-xl rounded-[32px] border border-slate-800 bg-slate-950/90 p-8 shadow-glow sm:p-10">
-        <p className="text-sm uppercase tracking-[0.3em] text-slate-500">Create account</p>
-        <h1 className="mt-4 text-3xl font-semibold text-slate-50">Register</h1>
+        <p className="text-sm uppercase tracking-[0.3em] text-slate-500">Akkaunt yaratish</p>
+        <h1 className="mt-4 text-3xl font-semibold text-slate-50">Ro'yxatdan o'tish</h1>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-5">
-          <Field label="Username" value={form.username} onChange={(value) => setForm((current) => ({ ...current, username: value }))} />
+          <Field label="Foydalanuvchi nomi" value={form.username} onChange={(value) => setForm((current) => ({ ...current, username: value }))} />
           <Field label="Email" value={form.email} onChange={(value) => setForm((current) => ({ ...current, email: value }))} />
           <Field
-            label="Display Name"
+            label="Ko'rinadigan ism"
             value={form.displayName}
             onChange={(value) => setForm((current) => ({ ...current, displayName: value }))}
           />
           <Field
-            label="Password"
+            label="Parol"
             type="password"
             value={form.password}
             onChange={(value) => setForm((current) => ({ ...current, password: value }))}
@@ -57,14 +57,14 @@ export default function RegisterPage() {
             disabled={submitting}
             className="w-full rounded-2xl bg-sky-400 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-sky-300 disabled:opacity-60"
           >
-            {submitting ? "Creating account..." : "Register"}
+            {submitting ? "Akkaunt yaratilmoqda..." : "Ro'yxatdan o'tish"}
           </button>
         </form>
 
         <p className="mt-6 text-sm text-slate-400">
-          Already have an account?{" "}
+          Akkauntingiz bormi?{" "}
           <Link to="/login" className="font-medium text-sky-300">
-            Login
+            Kirish
           </Link>
         </p>
       </div>

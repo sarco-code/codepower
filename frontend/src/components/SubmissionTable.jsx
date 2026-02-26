@@ -14,12 +14,12 @@ export default function SubmissionTable({
           <thead className="bg-slate-950/70 text-left text-xs uppercase tracking-[0.24em] text-slate-500">
             <tr>
               <th className="px-6 py-4">Run ID</th>
-              {showUser && <th className="px-6 py-4">User</th>}
-              <th className="px-6 py-4">Problem</th>
-              <th className="px-6 py-4">Verdict</th>
-              <th className="px-6 py-4">Time</th>
-              <th className="px-6 py-4">Memory</th>
-              <th className="px-6 py-4">Submitted</th>
+              {showUser && <th className="px-6 py-4">Foydalanuvchi</th>}
+              <th className="px-6 py-4">Masala</th>
+              <th className="px-6 py-4">Natija</th>
+              <th className="px-6 py-4">Vaqt</th>
+              <th className="px-6 py-4">Xotira</th>
+              <th className="px-6 py-4">Yuborilgan</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-800 text-slate-300">

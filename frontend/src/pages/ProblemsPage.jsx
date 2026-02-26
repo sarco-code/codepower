@@ -11,16 +11,16 @@ export default function ProblemsPage() {
   }, []);
 
   if (!problems) {
-    return <Loader label="Loading problems..." />;
+    return <Loader label="Masalalar yuklanmoqda..." />;
   }
 
   return (
     <div className="space-y-6">
       <div>
-        <p className="text-xs uppercase tracking-[0.28em] text-slate-500">Archive</p>
-        <h1 className="mt-2 text-3xl font-semibold text-slate-50">Problem List</h1>
+        <p className="text-xs uppercase tracking-[0.28em] text-slate-500">Arxiv</p>
+        <h1 className="mt-2 text-3xl font-semibold text-slate-50">Masalalar ro'yxati</h1>
         <p className="mt-3 text-sm leading-6 text-slate-400">
-          Solve curated tasks with full test-case judging, sample IO, and language switching in Monaco.
+          To'liq testlar bilan tekshiriladigan va namuna kirish-chiqishga ega masalalarni Monaco muharririda yeching.
         </p>
       </div>
       <ProblemTable problems={problems} />

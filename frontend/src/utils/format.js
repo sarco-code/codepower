@@ -1,8 +1,23 @@
 export function formatDate(value) {
-  return new Intl.DateTimeFormat("en-US", {
+  return new Intl.DateTimeFormat("uz-UZ", {
     dateStyle: "medium",
     timeStyle: "short"
   }).format(new Date(value));
+}
+
+export function translateVerdict(verdict) {
+  if (verdict === "Accepted") return "Qabul qilindi";
+  if (verdict === "Wrong Answer") return "Noto'g'ri javob";
+  if (verdict === "Time Limit Exceeded") return "Vaqt limiti oshdi";
+  if (verdict === "Compilation Error") return "Kompilyatsiya xatosi";
+  if (verdict === "Memory Limit Exceeded") return "Xotira limiti oshdi";
+  if (verdict === "Output Limit Exceeded") return "Chiqish limiti oshdi";
+  if (verdict === "Judge Error") return "Tekshiruvchi xatosi";
+  if (verdict === "Runtime Error") return "Bajarilishda xato";
+  if (verdict === "Running") return "Tekshirilmoqda";
+  if (verdict === "Pending") return "Kutilmoqda";
+  if (verdict === "Queued") return "Navbatda";
+  return verdict;
 }
 
 export function getVerdictTone(verdict) {

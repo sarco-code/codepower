@@ -1,11 +1,12 @@
 import { Link, NavLink, Outlet } from "react-router-dom";
-import { FileCode2, LayoutDashboard, ListChecks, LogOut, Shield, Swords, Trophy, UserCog } from "lucide-react";
+import { FileCode2, LayoutDashboard, ListChecks, LogOut, Shield, Swords, Trophy, UserCog, Users } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 
 const navItems = [
-  { to: "/", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/problems", label: "Problems", icon: ListChecks },
-  { to: "/contests", label: "Contests", icon: Trophy }
+  { to: "/", label: "Bosh sahifa", icon: LayoutDashboard },
+  { to: "/users", label: "Foydalanuvchilar", icon: Users },
+  { to: "/problems", label: "Masalalar", icon: ListChecks },
+  { to: "/contests", label: "Kontestlar", icon: Trophy }
 ];
 
 export default function AppShell() {
@@ -20,7 +21,7 @@ export default function AppShell() {
               <Swords className="h-6 w-6" />
             </div>
             <div>
-              <p className="text-xs uppercase tracking-[0.3em] text-slate-500">Competitive Judge</p>
+              <p className="text-xs uppercase tracking-[0.3em] text-slate-500">Dasturlash platformasi</p>
               <h1 className="text-xl font-semibold text-slate-100">Sarcstar</h1>
             </div>
           </Link>
@@ -60,7 +61,7 @@ export default function AppShell() {
                   }
                 >
                   <Shield className="h-4 w-4" />
-                  Admin Problems
+                  Admin masalalar
                 </NavLink>
                 <NavLink
                   to="/admin/contests"
@@ -73,7 +74,7 @@ export default function AppShell() {
                   }
                 >
                   <Trophy className="h-4 w-4" />
-                  Admin Contests
+                  Admin kontestlar
                 </NavLink>
                 <NavLink
                   to="/admin/users"
@@ -86,7 +87,7 @@ export default function AppShell() {
                   }
                 >
                   <UserCog className="h-4 w-4" />
-                  Admin Users
+                  Admin foydalanuvchilar
                 </NavLink>
                 <NavLink
                   to="/admin/submissions"
@@ -99,22 +100,22 @@ export default function AppShell() {
                   }
                 >
                   <FileCode2 className="h-4 w-4" />
-                  Admin Submissions
+                  Admin yuborishlar
                 </NavLink>
               </>
             )}
           </div>
 
           <div className="mt-10 rounded-3xl border border-slate-800 bg-slate-900/70 p-5">
-            <p className="text-xs uppercase tracking-[0.25em] text-slate-500">Signed in</p>
+            <p className="text-xs uppercase tracking-[0.25em] text-slate-500">Tizimga kirgan</p>
             <p className="mt-3 text-lg font-semibold text-slate-100">{user?.display_name || user?.username}</p>
-            <p className="mt-1 text-sm text-slate-400">{user?.role === "admin" ? "Administrator" : "Contestant"}</p>
+            <p className="mt-1 text-sm text-slate-400">{user?.role === "admin" ? "Administrator" : "Qatnashuvchi"}</p>
             <button
               onClick={logout}
               className="mt-5 inline-flex items-center gap-2 rounded-2xl border border-slate-700 px-4 py-2 text-sm font-medium text-slate-200 transition hover:bg-slate-800"
             >
               <LogOut className="h-4 w-4" />
-              Logout
+              Chiqish
             </button>
           </div>
         </aside>

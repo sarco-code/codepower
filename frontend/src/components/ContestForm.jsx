@@ -58,24 +58,24 @@ export default function ContestForm({ problems, initialValue, onSubmit, submitti
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       <Field
-        label="Title"
+        label="Sarlavha"
         value={form.title}
         onChange={(value) => setForm((current) => ({ ...current, title: value }))}
       />
       <TextArea
-        label="Description"
+        label="Tavsif"
         value={form.description}
         onChange={(value) => setForm((current) => ({ ...current, description: value }))}
       />
       <div className="grid gap-4 md:grid-cols-2">
         <Field
-          label="Starts At"
+          label="Boshlanish vaqti"
           type="datetime-local"
           value={form.startsAt}
           onChange={(value) => setForm((current) => ({ ...current, startsAt: value }))}
         />
         <Field
-          label="Ends At"
+          label="Tugash vaqti"
           type="datetime-local"
           value={form.endsAt}
           onChange={(value) => setForm((current) => ({ ...current, endsAt: value }))}
@@ -85,8 +85,8 @@ export default function ContestForm({ problems, initialValue, onSubmit, submitti
       <div className="rounded-3xl border border-slate-800 bg-slate-950/60 p-5">
         <div className="mb-4 flex items-center justify-between">
           <div>
-            <h3 className="text-lg font-semibold text-slate-100">Contest Problems</h3>
-            <p className="text-sm text-slate-400">{selectedCount} selected</p>
+            <h3 className="text-lg font-semibold text-slate-100">Kontest masalalari</h3>
+            <p className="text-sm text-slate-400">{selectedCount} ta tanlangan</p>
           </div>
         </div>
         <div className="grid gap-3">
@@ -114,7 +114,7 @@ export default function ContestForm({ problems, initialValue, onSubmit, submitti
                   </label>
                   <div className="w-28">
                     <Field
-                      label="Points"
+                      label="Ball"
                       type="number"
                       value={selected?.points ?? 10}
                       onChange={(value) => updatePoints(problem.id, value)}
@@ -134,7 +134,7 @@ export default function ContestForm({ problems, initialValue, onSubmit, submitti
           disabled={submitting}
           className="rounded-2xl bg-sky-400 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-sky-300 disabled:opacity-60"
         >
-          {submitting ? "Saving..." : "Save Contest"}
+          {submitting ? "Saqlanmoqda..." : "Kontestni saqlash"}
         </button>
         {onCancel && (
           <button
@@ -142,7 +142,7 @@ export default function ContestForm({ problems, initialValue, onSubmit, submitti
             onClick={onCancel}
             className="rounded-2xl border border-slate-700 px-5 py-3 text-sm font-semibold text-slate-200"
           >
-            Cancel
+            Bekor qilish
           </button>
         )}
       </div>

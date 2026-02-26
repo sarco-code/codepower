@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { getVerdictTone } from "../utils/format";
+import { getVerdictTone, translateVerdict } from "../utils/format";
 
 export default function VerdictBadge({ verdict }) {
   return (
@@ -9,7 +9,7 @@ export default function VerdictBadge({ verdict }) {
         getVerdictTone(verdict)
       )}
     >
-      {verdict}
+      {translateVerdict(verdict)}
     </span>
   );
 }
